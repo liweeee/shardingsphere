@@ -1,0 +1,24 @@
+server:
+  port: 9521
+  tomcat:
+    max-threads: 140
+    max-connections: 400
+    accept-count: 60
+    min-spare-threads: 120
+spring:
+  profiles:
+    active: pub
+  application:
+    name: hanxi.lw
+
+  servlet:
+    multipart:
+      max-file-size: 300MB
+      max-request-size: 350MB
+
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: none
+
+

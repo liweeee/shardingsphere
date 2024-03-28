@@ -1,0 +1,97 @@
+mode:
+  type: Standalone # 默认是单机模式。 Cluster 是集群模式
+  repository:
+    type: JDBC
+dataSources:
+  ds_0:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+#    dataSourceClassName: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://112.35.77.208:19527/jjjy_pub?characterEncoding=utf8&serverTimezone=GMT%2B8
+    username: root
+    password: iHanxi@20184laoganju
+#    connectionTimeoutMilliseconds: 30000
+#    idleTimeoutMilliseconds: 60000
+#    maxLifetimeMilliseconds: 1800000
+#    maxPoolSize: 50
+#    minIdle: 10
+#    maintenanceIntervalMilliseconds: 30000
+#    poolName: MyHikariCP
+#    hikariConfig:
+#      minimumIdle: 10
+#      maximumPoolSize: 20
+#      maxLifetime: 300000
+#      connectionTimeout: 30000
+#      idleTimeout: 600000
+#      connectionTestQuery: SELECT 1
+#      pooName: laoganju
+
+rules: #配置分库分表规则、表加解密配置 等
+  - !ENCRYPT
+    tables:
+      t_account:  # 加密表名称
+        columns:
+          password: #逻辑列（如果是老系统一般都会把这个逻辑列和实际物理列名称一致）
+            name: password_ming #实际物理列名 明文列
+            cipher:
+              name: password_cipher # 密文列名称
+              encryptorName: aes_encryptor # 密文列加密算法名称
+            assistedQuery:
+              name: assisted_query_pwd #辅助查询列的名称
+              encryptorName: md5_encryptor #辅助查询列的算法名称
+          mobile:
+            name: mobile_ming #实际物理列名 明文列
+            cipher:
+              name: mobile_cipher # 密文列名称
+              encryptorName: aes_encryptor # 密文列加密算法名称
+            assistedQuery:
+              name: assisted_query_mobile #辅助查询列的名称
+              encryptorName: md5_encryptor #辅助查询列的算法名称
+            likeQuery:
+              name: mobile_like #模糊查询列名称
+              encryptorName: like_encryptor #模糊查询算法名称
+#          queryWithCipherColumn: true
+    encryptors:
+#      sm4_encryptor:
+#        type: SM4
+#        props:
+#          sm4-key: aaaabbbbccccdddd1111222233334444
+#          sm4-mode: ECB
+#          sm4-iv: aabbccddeeffgghh
+#          sm4-padding: PKCS7Padding
+      md5_encryptor:
+        type: MD5
+      aes_encryptor:
+        type: AES
+        props:
+          aes-key-value: 123456abc
+      like_encryptor:
+        type: CHAR_DIGEST_LIKE
+props:
+  sql-show: true
+#  quartz-datasource:
+#       url: jdbc:mysql://112.35.77.208:19527/jjjy_pub_quartz?characterEncoding=utf8&serverTimezone=GMT%2B8
+#       username: root
+#       password: iHanxi@20184laoganju
+#       driver-class-name: com.mysql.cj.jdbc.Driver
+#       name: quartz_datasource
+
+
+#          password:
+#            plainColumn: password
+#            cipherColumn: password_cipher
+#            encryptorName: aes_encryptor
+#            assistedQueryColumn: assisted_query_pwd
+#            assistedQueryEncryptorName: md5_encryptor
+#          mobile:
+#            plainColumn: mobile
+#            cipherColumn: mobile_cipher
+#            encryptorName: aes_encryptor
+#            assistedQueryColumn: assisted_query_mobile
+#            assistedQueryEncryptorName: md5_encryptor
+#            likeQueryColumn: mobile_like
+#            likeQueryEncryptorName: like_encryptor
+#
+#        queryWithCipherColumn: true
+
+# 新版本5.4.1 配置如下
